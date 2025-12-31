@@ -1,0 +1,288 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Dark Premium Tattoo Studio Theme */
+    --background: 0 0% 10%;
+    --foreground: 0 0% 95%;
+
+    --card: 0 0% 12%;
+    --card-foreground: 0 0% 95%;
+
+    --popover: 0 0% 12%;
+    --popover-foreground: 0 0% 95%;
+
+    /* Gold accent as primary */
+    --primary: 43 74% 49%;
+    --primary-foreground: 0 0% 5%;
+
+    --secondary: 0 0% 16%;
+    --secondary-foreground: 0 0% 95%;
+
+    --muted: 0 0% 18%;
+    --muted-foreground: 0 0% 60%;
+
+    --accent: 43 74% 49%;
+    --accent-foreground: 0 0% 5%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 95%;
+
+    --warning: 45 93% 47%;
+    --warning-foreground: 0 0% 5%;
+
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 95%;
+
+    --border: 0 0% 20%;
+    --input: 0 0% 18%;
+    --ring: 43 74% 49%;
+
+    --radius: 0.5rem;
+
+    /* Custom tokens */
+    --gold: 43 74% 49%;
+    --gold-light: 43 74% 60%;
+    --gold-dark: 43 74% 35%;
+    --charcoal: 0 0% 10%;
+    --charcoal-light: 0 0% 14%;
+    --charcoal-dark: 0 0% 6%;
+
+    /* Gradients */
+    --gradient-gold: linear-gradient(135deg, hsl(43, 74%, 49%), hsl(43, 74%, 35%));
+    --gradient-dark: linear-gradient(180deg, hsl(0, 0%, 12%), hsl(0, 0%, 8%));
+    --gradient-card: linear-gradient(145deg, hsl(0, 0%, 14%), hsl(0, 0%, 10%));
+
+    /* Shadows */
+    --shadow-gold: 0 4px 30px -5px hsl(43 74% 49% / 0.3);
+    --shadow-dark: 0 10px 40px -10px rgba(0, 0, 0, 0.5);
+    --shadow-inset: inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+
+    /* Sidebar */
+    --sidebar-background: 0 0% 10%;
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 43 74% 49%;
+    --sidebar-primary-foreground: 0 0% 5%;
+    --sidebar-accent: 0 0% 16%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 0 0% 20%;
+    --sidebar-ring: 43 74% 49%;
+  }
+
+  .dark {
+    --background: 0 0% 10%;
+    --foreground: 0 0% 95%;
+    --card: 0 0% 12%;
+    --card-foreground: 0 0% 95%;
+    --popover: 0 0% 12%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 43 74% 49%;
+    --primary-foreground: 0 0% 5%;
+    --secondary: 0 0% 16%;
+    --secondary-foreground: 0 0% 95%;
+    --muted: 0 0% 18%;
+    --muted-foreground: 0 0% 60%;
+    --accent: 43 74% 49%;
+    --accent-foreground: 0 0% 5%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 95%;
+    --border: 0 0% 20%;
+    --input: 0 0% 18%;
+    --ring: 43 74% 49%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    /* Removed scroll-behavior: smooth to allow Lenis to control scrolling physics */
+    /* scroll-behavior: smooth; */
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-display font-semibold tracking-tight;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-card/60 backdrop-blur-xl border border-white/10;
+    box-shadow:
+      0 4px 30px rgba(0, 0, 0, 0.1),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .glass-card:hover {
+    box-shadow:
+      0 10px 40px -10px rgba(212, 175, 55, 0.1),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  }
+
+  .gold-glow {
+    box-shadow: var(--shadow-gold);
+  }
+
+  .text-gradient-gold {
+    @apply bg-clip-text text-transparent;
+    background-image: var(--gradient-gold);
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.5s ease-out forwards;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.3s ease-out forwards;
+  }
+
+  /* Shadow utilities for gold accents */
+  .shadow-gold {
+    box-shadow: 0 4px 30px -5px hsl(43 74% 49% / 0.3);
+  }
+
+  .shadow-gold-lg {
+    box-shadow: 0 8px 40px -5px hsl(43 74% 49% / 0.4);
+  }
+
+  /* Enhanced card styles for premium feel */
+  .premium-card {
+    @apply rounded-xl md:rounded-2xl border border-border/50;
+    background: linear-gradient(145deg, hsl(0 0% 14% / 0.8), hsl(0 0% 10% / 0.9));
+    box-shadow:
+      var(--shadow-inset),
+      0 10px 40px -10px rgba(0, 0, 0, 0.5),
+      0 0 0 1px rgba(255, 255, 255, 0.03);
+  }
+
+  /* Touch-friendly button base */
+  .touch-manipulation {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Tablet-specific utilities */
+  @screen md {
+    .tablet-grid-2 {
+      @apply grid grid-cols-2 gap-6;
+    }
+
+    .tablet-padding {
+      @apply px-8 py-6;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse-gold {
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 hsl(43 74% 49% / 0.4);
+  }
+
+  50% {
+    box-shadow: 0 0 0 10px hsl(43 74% 49% / 0);
+  }
+}
+
+
+  /* Advanced Premium Glass Effect */
+  .premium-glass {
+    @apply backdrop-blur-2xl border border-white/5;
+    background: linear-gradient(
+      145deg, 
+      rgba(255, 255, 255, 0.03) 0%, 
+      rgba(0, 0, 0, 0.2) 100%
+    );
+    box-shadow: 
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.05),
+      0 10px 40px -10px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Gold Glow Focus State */
+  .focus-glow:focus-visible {
+    box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--primary) / 0.5), 0 0 15px hsl(var(--primary) / 0.3);
+    border-color: hsl(var(--primary));
+    outline: none;
+  }
+
+  /* Keyboard Safety Scroll Padding */
+  html {
+    scroll-padding-top: 120px; /* Prevents header from covering focused inputs */
+  }
+
+  @media (max-width: 768px) {
+    html {
+      scroll-padding-top: 100px;
+    }
+  }
+
+  .animate-pulse-gold {
+    animation: pulse-gold 2s ease-in-out infinite;
+  }
