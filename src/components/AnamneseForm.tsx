@@ -344,7 +344,7 @@ const AnamneseForm: React.FC = () => {
                     fieldName="queloides"
                     value={healthAnswers.queloides.value}
                     details={healthAnswers.queloides.details}
-                    isRisk={true}
+
                     onChange={(v) => updateHealthAnswer('queloides', v)}
                     onDetailsChange={(d) => updateHealthDetails('queloides', d)}
                   />
@@ -372,7 +372,7 @@ const AnamneseForm: React.FC = () => {
                     fieldName="roacutan"
                     value={healthAnswers.roacutan.value}
                     details={healthAnswers.roacutan.details}
-                    isRisk={true}
+
                     onChange={(v) => updateHealthAnswer('roacutan', v)}
                     onDetailsChange={(d) => updateHealthDetails('roacutan', d)}
                   />
@@ -391,7 +391,7 @@ const AnamneseForm: React.FC = () => {
                     fieldName="doencasInfecciosas"
                     value={healthAnswers.doencasInfecciosas.value}
                     details={healthAnswers.doencasInfecciosas.details}
-                    isRisk={true}
+
                     onChange={(v) => updateHealthAnswer('doencasInfecciosas', v)}
                     onDetailsChange={(d) => updateHealthDetails('doencasInfecciosas', d)}
                   />
