@@ -9,6 +9,12 @@ export const useFormProgress = ({ sectionRefs, offset = 200 }: UseFormProgressOp
   const [currentStep, setCurrentStep] = useState(0);
 
   const handleScroll = useCallback(() => {
+    // Safety check: Se estiver no topo da página, força a primeira etapa
+    if (window.scrollY < 100) {
+      setCurrentStep(0);
+      return;
+    }
+
     const scrollPosition = window.scrollY + offset;
 
     for (let i = sectionRefs.length - 1; i >= 0; i--) {
@@ -26,7 +32,7 @@ export const useFormProgress = ({ sectionRefs, offset = 200 }: UseFormProgressOp
   useEffect(() => {
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll(); // Initial check
-    
+
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
