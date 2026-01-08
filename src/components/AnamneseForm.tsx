@@ -223,27 +223,29 @@ const AnamneseForm: React.FC = () => {
     <div className="min-h-screen bg-background">
       {/* Header with Progress */}
       <header className="sticky top-0 z-50 backdrop-blur-xl bg-background/80 border-b border-border/50 shadow-lg supports-[backdrop-filter]:bg-background/60">
-        <FadeIn direction="down" className="container mx-auto px-4 md:px-8 py-4 md:py-5">
-          <div className="flex flex-col gap-4 md:gap-6">
-            {/* Logo and Title */}
-            <div className="flex flex-col items-center justify-center gap-2 md:gap-4">
+        <FadeIn direction="down" className="container mx-auto px-4 md:px-8 py-1 md:py-2 lg:py-5">
+          {/* Mobile/Tablet: Horizontal Layout | Desktop: Vertical */}
+          <div className="flex flex-row lg:flex-col items-center justify-between lg:justify-center gap-2 md:gap-3 lg:gap-6">
+
+            {/* Logo + Title Group */}
+            <div className="flex flex-row lg:flex-col items-center gap-2 lg:gap-4 flex-shrink-0">
               <img
                 src="/gold-class-logo.png"
                 alt="Gold Class Tattoo"
-                className="w-32 md:w-52 h-auto object-contain drop-shadow-xl animate-fade-in"
+                className="w-12 md:w-16 lg:w-40 h-auto object-contain drop-shadow-xl animate-fade-in"
               />
-              <div className="text-center">
-                <h1 className="text-lg md:text-3xl font-display font-bold text-gradient-gold">
+              <div className="text-left lg:text-center">
+                <h1 className="text-sm md:text-base lg:text-2xl font-display font-bold text-gradient-gold whitespace-nowrap">
                   Ficha de Anamnese
                 </h1>
-                <p className="text-xs md:text-sm text-muted-foreground hidden md:block mt-1">
+                <p className="text-xs text-muted-foreground hidden lg:block mt-1">
                   Preencha com atenção para sua segurança
                 </p>
               </div>
             </div>
 
             {/* Progress Stepper */}
-            <ProgressStepper currentStep={currentStep} className="max-w-2xl mx-auto" />
+            <ProgressStepper currentStep={currentStep} className="max-w-xs lg:max-w-2xl w-auto lg:mx-auto" />
           </div>
         </FadeIn>
       </header>
