@@ -223,7 +223,7 @@ const AnamneseForm: React.FC = () => {
     <div className="min-h-screen bg-background">
       {/* Header with Progress */}
       <header className="sticky top-0 z-50 backdrop-blur-xl bg-background/80 border-b border-border/50 shadow-lg supports-[backdrop-filter]:bg-background/60">
-        <FadeIn direction="down" className="container mx-auto px-4 md:px-8 py-1 md:py-2 lg:py-5">
+        <FadeIn direction="down" className="container mx-auto px-4 md:px-8 py-1 md:py-3 lg:py-5">
           {/* Mobile/Tablet: Horizontal Layout | Desktop: Vertical */}
           <div className="flex flex-row lg:flex-col items-center justify-between lg:justify-center gap-2 md:gap-3 lg:gap-6">
 
@@ -232,10 +232,10 @@ const AnamneseForm: React.FC = () => {
               <img
                 src="/gold-class-logo.png"
                 alt="Gold Class Tattoo"
-                className="w-12 md:w-16 lg:w-40 h-auto object-contain drop-shadow-xl animate-fade-in"
+                className="w-16 md:w-32 lg:w-56 h-auto object-contain drop-shadow-xl animate-fade-in"
               />
               <div className="text-left lg:text-center">
-                <h1 className="text-sm md:text-base lg:text-2xl font-display font-bold text-gradient-gold whitespace-nowrap">
+                <h1 className="text-sm md:text-xl lg:text-2xl font-display font-bold text-gradient-gold whitespace-nowrap">
                   Ficha de Anamnese
                 </h1>
                 <p className="text-xs text-muted-foreground hidden lg:block mt-1">
@@ -245,7 +245,7 @@ const AnamneseForm: React.FC = () => {
             </div>
 
             {/* Progress Stepper */}
-            <ProgressStepper currentStep={currentStep} className="max-w-xs lg:max-w-2xl w-auto lg:mx-auto" />
+            <ProgressStepper currentStep={currentStep} className="flex-1 md:flex md:justify-center md:max-w-md lg:max-w-2xl lg:mx-auto" />
           </div>
         </FadeIn>
       </header>

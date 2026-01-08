@@ -27,7 +27,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
 }) => {
   return (
     <div className={cn("w-full", className)}>
-      <div className="flex items-center justify-between gap-1.5 md:gap-2 lg:gap-0">
+      <div className="flex items-center justify-between gap-1.5 md:gap-4 lg:gap-0">
         {steps.map((step, index) => {
           const isCompleted = index < currentStep;
           const isCurrent = index === currentStep;
@@ -40,17 +40,17 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
                 <div
                   className={cn(
                     "flex items-center justify-center rounded-full border-2 transition-all duration-300",
-                    "w-8 h-8 md:w-9 md:h-9 lg:w-12 lg:h-12",
+                    "w-8 h-8 md:w-12 md:h-12 lg:w-12 lg:h-12",
                     isCompleted && "bg-primary border-primary text-primary-foreground",
                     isCurrent && "border-primary text-primary bg-primary/10 shadow-gold",
                     !isCompleted && !isCurrent && "border-muted-foreground/30 text-muted-foreground bg-background"
                   )}
                 >
                   {isCompleted ? (
-                    <Check className="w-4 h-4 md:w-4.5 md:h-4.5 lg:w-6 lg:h-6" />
+                    <Check className="w-4 h-4 md:w-6 md:h-6 lg:w-6 lg:h-6" />
                   ) : (
                     React.cloneElement(step.icon as React.ReactElement, {
-                      className: "w-3.5 h-3.5 md:w-4 md:h-4 lg:w-5 lg:h-5"
+                      className: "w-3.5 h-3.5 md:w-5 md:h-5 lg:w-5 lg:h-5"
                     })
                   )}
                 </div>
@@ -71,7 +71,7 @@ const ProgressStepper: React.FC<ProgressStepperProps> = ({
 
               {/* Connector line */}
               {!isLast && (
-                <div className="flex-1 mx-1 md:mx-1.5 lg:mx-4 h-0.5 mt-[-20px] lg:mt-[-28px]">
+                <div className="flex-1 mx-1 md:mx-3 lg:mx-4 h-0.5 mt-[-20px] md:mt-[-28px] lg:mt-[-28px]">
                   <div
                     className={cn(
                       "h-full transition-all duration-500",
