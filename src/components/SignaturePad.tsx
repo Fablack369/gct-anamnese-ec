@@ -26,7 +26,7 @@ const SignaturePad = forwardRef<HTMLDivElement, SignaturePadProps>(
     // Convert stroke points to SVG path using perfect-freehand
     const getSvgPathFromStroke = useCallback((points: Point[]): string => {
       const stroke = getStroke(points, {
-        size: 16,
+        size: 8,
         thinning: 0.6,
         smoothing: 0.5,
         streamline: 0.3,
