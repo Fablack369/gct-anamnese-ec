@@ -13,6 +13,47 @@ const SignaturePad = forwardRef<HTMLDivElement, SignaturePadProps>(
   ({ onSignatureChange, className }, ref) => {
     const sigPadRef = useRef<SignatureCanvas>(null);
 
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    const resizeCanvas = useCallback(() => {
+      if (sigPadRef.current && containerRef.current) {
+        const canvas = sigPadRef.current.getCanvas();
+        const container = containerRef.current;
+
+        // Get the device pixel ratio, strictly 1 or higher
+        const ratio = Math.max(window.devicePixelRatio || 1, 1);
+
+        // Save current content if needed (optional, clears on resize usually)
+        // const data = sigPadRef.current.toData();
+
+        // Set canvas width/height to physical pixels
+        canvas.width = container.offsetWidth * ratio;
+        canvas.height = container.offsetHeight * ratio;
+
+        // Scale the context to match
+        const ctx = canvas.getContext('2d');
+        if (ctx) ctx.scale(ratio, ratio);
+
+        // Reset or redraw logic could go here if content persistence is needed
+        // sigPadRef.current.fromData(data);
+        sigPadRef.current.clear(); // Clear to prevent distortion, simple approach
+      }
+    }, []);
+
+    React.useEffect(() => {
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas(); // Initial sizing
+
+      // Also use ResizeObserver for more robust handling
+      const observer = new ResizeObserver(() => resizeCanvas());
+      if (containerRef.current) observer.observe(containerRef.current);
+
+      return () => {
+        window.removeEventListener('resize', resizeCanvas);
+        observer.disconnect();
+      };
+    }, [resizeCanvas]);
+
     const handleClear = useCallback(() => {
       if (sigPadRef.current) {
         sigPadRef.current.clear();
@@ -49,21 +90,20 @@ const SignaturePad = forwardRef<HTMLDivElement, SignaturePadProps>(
 
     return (
       <div ref={ref} className={cn("space-y-3 md:space-y-4", className)}>
-        <div className="relative rounded-xl border border-white/10 bg-black/40 backdrop-blur-sm overflow-hidden transition-all duration-300 hover:border-primary/50 group focus-within:ring-2 focus-within:ring-primary/50 focus-within:shadow-gold">
+        <div ref={containerRef} className="relative rounded-xl w-full h-48 md:h-[280px] border border-white/10 bg-black/40 backdrop-blur-sm overflow-hidden transition-all duration-300 hover:border-primary/50 group focus-within:ring-2 focus-within:ring-primary/50 focus-within:shadow-gold">
           <SignatureCanvas
             ref={sigPadRef}
             penColor="#d4af37"
-            minWidth={0.9}
-            maxWidth={1.3}
-            velocityFilterWeight={0.7}
-            throttle={8}
-            minDistance={3}
+            minWidth={1.5}
+            maxWidth={3.5}
+            velocityFilterWeight={0.8}
+            throttle={0}
+            minDistance={2}
             canvasProps={{
               className: 'w-full h-48 md:h-[280px] touch-none',
               style: {
                 width: '100%',
-                height: 'auto',
-                minHeight: '192px',
+                height: '100%',
                 backgroundColor: 'transparent'
               }
             }}
