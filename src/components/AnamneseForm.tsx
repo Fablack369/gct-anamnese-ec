@@ -160,7 +160,7 @@ const AnamneseForm: React.FC = () => {
 
       // Create client
       // Save data using RPC transaction
-      const { error: rpcError } = await supabase.rpc('salvar_ficha_anamnese', {
+      const { error: rpcError } = await supabase.rpc('salvar_ficha_anamnese' as any, {
         p_cliente: {
           nome: nome.trim(),
           data_nascimento: dataNascimento || null,
