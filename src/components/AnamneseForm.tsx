@@ -464,22 +464,7 @@ const AnamneseForm: React.FC = () => {
             </FadeIn>
 
             {/* Risk Warning */}
-            {hasRiskCondition() && (
-              <FadeIn>
-                <div className="animate-slide-up p-4 md:p-5 rounded-xl bg-warning/10 border border-warning/30">
-                  <div className="flex items-start gap-3 md:gap-4">
-                    <AlertTriangle className="w-6 h-6 md:w-7 md:h-7 text-warning shrink-0" />
-                    <div>
-                      <h3 className="font-semibold text-warning text-base md:text-lg">Atenção Especial Necessária</h3>
-                      <p className="text-sm md:text-base text-warning/80 mt-1">
-                        Com base nas suas respostas, identificamos condições que requerem atenção especial.
-                        Converse com o tatuador antes de prosseguir com o procedimento.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </FadeIn>
-            )}
+
 
             {/* Submit Button */}
             <FadeIn>
