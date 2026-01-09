@@ -1,6 +1,6 @@
 import React, { useRef, useCallback, useState, useEffect, forwardRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { Eraser } from 'lucide-react';
+import { Eraser, Undo2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getStroke } from 'perfect-freehand';
 
@@ -189,16 +189,39 @@ const SignaturePad = forwardRef<HTMLDivElement, SignaturePadProps>(
       }
     }, [isDrawing, currentStroke, onSignatureChange]);
 
-    const handleClear = useCallback(() => {
-      setStrokes([]);
-      setCurrentStroke([]);
-      if (canvasRef.current) {
-        const ctx = canvasRef.current.getContext('2d');
-        if (ctx) {
-          ctx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-        }
-      }
-      onSignatureChange(null);
+    const handleUndo = useCallback(() => {
+      setStrokes((prev) => {
+        if (prev.length === 0) return prev;
+        const newStrokes = prev.slice(0, -1);
+
+        // Update signature data after state update and redraw
+        setTimeout(() => {
+          if (canvasRef.current) {
+            if (newStrokes.length === 0) {
+              onSignatureChange(null);
+              return;
+            }
+            // Convert gold to black for saving
+            const originalCanvas = canvasRef.current;
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = originalCanvas.width;
+            tempCanvas.height = originalCanvas.height;
+            const ctx = tempCanvas.getContext('2d');
+
+            if (ctx) {
+              ctx.drawImage(originalCanvas, 0, 0);
+              ctx.globalCompositeOperation = 'source-in';
+              ctx.fillStyle = '#000000';
+              ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+
+              const dataUrl = tempCanvas.toDataURL('image/png');
+              onSignatureChange(dataUrl);
+            }
+          }
+        }, 50);
+
+        return newStrokes;
+      });
     }, [onSignatureChange]);
 
     return (
@@ -227,11 +250,22 @@ const SignaturePad = forwardRef<HTMLDivElement, SignaturePadProps>(
             type="button"
             variant="outline"
             size="default"
+            onClick={handleUndo}
+            disabled={strokes.length === 0}
+            className="flex-1 min-h-[44px] md:min-h-[48px] text-sm md:text-base touch-manipulation"
+          >
+            <Undo2 className="mr-2 h-4 w-4 md:h-5 md:w-5" />
+            Desfazer
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            size="default"
             onClick={handleClear}
             className="flex-1 min-h-[44px] md:min-h-[48px] text-sm md:text-base touch-manipulation"
           >
             <Eraser className="mr-2 h-4 w-4 md:h-5 md:w-5" />
-            Limpar Assinatura
+            Limpar
           </Button>
         </div>
       </div>
