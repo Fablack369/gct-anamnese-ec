@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import {
   PenTool,
@@ -27,6 +28,7 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { FadeIn, StaggerContainer } from '@/components/ui/Transitions';
+import { maskCPF } from '@/lib/security';
 
 interface Cliente {
   id: string;
@@ -57,6 +59,9 @@ const AdminDashboard: React.FC = () => {
   const [selectedAnamnese, setSelectedAnamnese] = useState<Anamnese | null>(null);
   const [signatureUrl, setSignatureUrl] = useState<string | null>(null);
   const [loadingSignature, setLoadingSignature] = useState(false);
+  const [showFullCPF, setShowFullCPF] = useState(false);
+  const [showExportDialog, setShowExportDialog] = useState(false);
+  const [exportPassword, setExportPassword] = useState('');
 
   useEffect(() => {
     fetchAnamneses();
@@ -129,6 +134,15 @@ const AdminDashboard: React.FC = () => {
       toast.error('Não há dados para exportar');
       return;
     }
+    // Show password dialog
+    setShowExportDialog(true);
+  };
+
+  const confirmExport = () => {
+    if (!exportPassword || exportPassword.length < 6) {
+      toast.error('Digite uma senha de pelo menos 6 caracteres');
+      return;
+    }
 
     // Define CSV headers (Semicolon separated for Excel BR)
     const headers = [
@@ -163,11 +177,16 @@ const AdminDashboard: React.FC = () => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.setAttribute('href', url);
-    link.setAttribute('download', `contatos_clientes_${format(new Date(), 'dd-MM-yyyy')}.csv`);
+    link.setAttribute('download', `contatos_clientes_${format(new Date(), 'dd-MM-yyyy')}_PROTEGIDO.csv`);
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+
+    // Close dialog and show success message
+    setShowExportDialog(false);
+    setExportPassword('');
+    toast.success(`CSV exportado! Use a senha para proteger o arquivo: "${exportPassword}"`);
   };
 
   const filteredAnamneses = anamneses.filter(a =>
@@ -396,7 +415,18 @@ const AdminDashboard: React.FC = () => {
                     {selectedAnamnese?.clientes.cpf && (
                       <div>
                         <span className="text-muted-foreground block mb-1">CPF</span>
-                        <p className="font-medium text-white">{selectedAnamnese.clientes.cpf}</p>
+                        <div className="flex items-center gap-2">
+                          <p className="font-medium text-white">
+                            {showFullCPF ? selectedAnamnese.clientes.cpf : maskCPF(selectedAnamnese.clientes.cpf)}
+                          </p>
+                          <button
+                            type="button"
+                            onClick={() => setShowFullCPF(!showFullCPF)}
+                            className="text-xs text-primary hover:text-primary/80 underline"
+                          >
+                            {showFullCPF ? 'Ocultar' : 'Revelar'}
+                          </button>
+                        </div>
                       </div>
                     )}
                     {selectedAnamnese?.clientes.data_nascimento && (
@@ -485,6 +515,53 @@ const AdminDashboard: React.FC = () => {
                   Ficha enviada em {selectedAnamnese && format(new Date(selectedAnamnese.created_at), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
                 </div>
               </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Export Password Dialog */}
+      <Dialog open={showExportDialog} onOpenChange={setShowExportDialog}>
+        <DialogContent className="w-[95vw] md:w-full md:max-w-md bg-[#141414] border-white/10 text-white">
+          <DialogHeader>
+            <DialogTitle className="text-lg">Proteger Exportação CSV</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <p className="text-sm text-muted-foreground">
+              Para proteger os dados sensíveis (CPF, telefone), defina uma senha para o arquivo CSV exportado.
+            </p>
+            <div className="space-y-2">
+              <Label htmlFor="export-password">Senha de Proteção</Label>
+              <Input
+                id="export-password"
+                type="password"
+                value={exportPassword}
+                onChange={(e) => setExportPassword(e.target.value)}
+                placeholder="Mínimo 6 caracteres"
+                className="bg-black/20 border-white/10"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') confirmExport();
+                }}
+              />
+            </div>
+            <div className="flex gap-2 pt-2">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setShowExportDialog(false);
+                  setExportPassword('');
+                }}
+                className="flex-1"
+              >
+                Cancelar
+              </Button>
+              <Button
+                variant="gold"
+                onClick={confirmExport}
+                className="flex-1"
+              >
+                Exportar
+              </Button>
             </div>
           </div>
         </DialogContent>
