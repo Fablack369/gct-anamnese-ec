@@ -160,7 +160,8 @@ const AnamneseForm: React.FC = () => {
 
       // Create client
       // Save data using RPC transaction
-      const { error: rpcError } = await supabase.rpc('salvar_ficha_anamnese' as any, {
+      // @ts-expect-error - RPC function not in generated types yet
+      const { error: rpcError } = await supabase.rpc('salvar_ficha_anamnese', {
         p_cliente: {
           nome: nome.trim(),
           data_nascimento: dataNascimento || null,
@@ -279,6 +280,8 @@ const AnamneseForm: React.FC = () => {
                       onChange={(e) => setNome(e.target.value)}
                       placeholder="Digite seu nome completo"
                       className="h-12 md:h-14 text-base md:text-lg focus-glow bg-black/20 border-white/10 placeholder:text-muted-foreground/50"
+                      enterKeyHint="next"
+                      autoComplete="name"
                       required
                     />
                   </div>
@@ -318,6 +321,8 @@ const AnamneseForm: React.FC = () => {
                         placeholder="(00) 00000-0000"
                         maxLength={15}
                         inputMode="tel"
+                        enterKeyHint="next"
+                        autoComplete="tel"
                         className="h-12 md:h-14 text-base md:text-lg focus-glow bg-black/20 border-white/10 placeholder:text-muted-foreground/50"
                         required
                       />
