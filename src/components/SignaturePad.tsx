@@ -245,7 +245,7 @@ const SignaturePad = forwardRef<HTMLDivElement, SignaturePadProps>(
             className="w-full h-full touch-none cursor-crosshair"
             style={{ width: '100%', height: '100%' }}
           />
-          <div className="absolute bottom-3 md:bottom-4 left-3 md:left-4 right-3 md:right-4 border-t border-primary/30 pointer-events-none">
+          <div className="absolute bottom-12 md:bottom-16 left-3 md:left-4 right-3 md:right-4 border-t border-primary/30 pointer-events-none">
             <span className="absolute -top-3 left-4 text-xs md:text-sm text-muted-foreground bg-charcoal-dark px-2 md:px-3">
               Assine aqui
             </span>
