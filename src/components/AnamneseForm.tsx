@@ -132,7 +132,9 @@ const AnamneseForm: React.FC = () => {
 
       const fileName = `assinatura_${Date.now()}_${sanitizedName}.png`;
 
-      console.log('Tentando upload de assinatura:', { fileName, size: signatureBlob.size, type: signatureBlob.type });
+      if (import.meta.env.DEV) {
+        console.log('Tentando upload de assinatura:', { fileName, size: signatureBlob.size, type: signatureBlob.type });
+      }
 
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from('assinaturas')
@@ -142,11 +144,15 @@ const AnamneseForm: React.FC = () => {
         });
 
       if (uploadError) {
-        console.error('Erro detalhado do upload:', uploadError);
+        if (import.meta.env.DEV) {
+          console.error('Erro detalhado do upload:', uploadError);
+        }
         throw new Error(`Erro no upload da assinatura: ${uploadError.message}`);
       }
 
-      console.log('Upload realizado com sucesso:', uploadData);
+      if (import.meta.env.DEV) {
+        console.log('Upload realizado com sucesso:', uploadData);
+      }
 
       const { data: { publicUrl } } = supabase.storage
         .from('assinaturas')
@@ -176,7 +182,9 @@ const AnamneseForm: React.FC = () => {
       setSubmitted(true);
       toast.success('Ficha de anamnese enviada com sucesso!');
     } catch (error: any) {
-      console.error('Erro ao enviar:', error);
+      if (import.meta.env.DEV) {
+        console.error('Erro ao enviar:', error);
+      }
       toast.error(error.message || 'Erro ao enviar a ficha. Tente novamente.');
     } finally {
       setLoading(false);

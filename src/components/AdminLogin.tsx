@@ -35,7 +35,7 @@ const AdminLogin: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!email.trim() || !password.trim()) {
       toast.error('Preencha todos os campos');
       return;
@@ -57,7 +57,7 @@ const AdminLogin: React.FC = () => {
             emailRedirectTo: `${window.location.origin}/admin`
           }
         });
-        
+
         if (error) {
           if (error.message.includes('already registered')) {
             toast.error('Este email já está cadastrado');
@@ -73,7 +73,7 @@ const AdminLogin: React.FC = () => {
           email: email.trim(),
           password,
         });
-        
+
         if (error) {
           if (error.message.includes('Invalid login')) {
             toast.error('Email ou senha incorretos');
@@ -86,7 +86,9 @@ const AdminLogin: React.FC = () => {
         }
       }
     } catch (error) {
-      console.error('Auth error:', error);
+      if (import.meta.env.DEV) {
+        console.error('Auth error:', error);
+      }
       toast.error('Erro ao processar. Tente novamente.');
     } finally {
       setLoading(false);

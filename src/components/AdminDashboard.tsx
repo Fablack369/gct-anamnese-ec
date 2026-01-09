@@ -55,10 +55,45 @@ const AdminDashboard: React.FC = () => {
   const [anamneses, setAnamneses] = useState<Anamnese[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedAnamnese, setSelectedAnamnese] = useState<Anamnese | null>(null);
+  const [signatureUrl, setSignatureUrl] = useState<string | null>(null);
+  const [loadingSignature, setLoadingSignature] = useState(false);
 
   useEffect(() => {
     fetchAnamneses();
   }, []);
+
+  // Fetch signed URL for signature when dialog opens
+  useEffect(() => {
+    const loadSignature = async () => {
+      if (!selectedAnamnese?.url_assinatura) {
+        setSignatureUrl(null);
+        return;
+      }
+
+      setLoadingSignature(true);
+      try {
+        // Extract filename from public URL
+        const urlParts = selectedAnamnese.url_assinatura.split('/');
+        const fileName = urlParts[urlParts.length - 1];
+
+        // Create signed URL (valid for 1 hour)
+        const { data, error } = await supabase.storage
+          .from('assinaturas')
+          .createSignedUrl(fileName, 3600);
+
+        if (error) throw error;
+        setSignatureUrl(data.signedUrl);
+      } catch (error) {
+        console.error('Error loading signature:', error);
+        toast.error('Erro ao carregar assinatura');
+        setSignatureUrl(null);
+      } finally {
+        setLoadingSignature(false);
+      }
+    };
+
+    loadSignature();
+  }, [selectedAnamnese]);
 
   const fetchAnamneses = async () => {
     setLoading(true);
@@ -74,7 +109,9 @@ const AdminDashboard: React.FC = () => {
       if (error) throw error;
       setAnamneses(data || []);
     } catch (error) {
-      console.error('Error fetching:', error);
+      if (import.meta.env.DEV) {
+        console.error('Error fetching:', error);
+      }
       toast.error('Erro ao carregar fichas');
     } finally {
       setLoading(false);
@@ -424,12 +461,22 @@ const AdminDashboard: React.FC = () => {
                       <PenTool className="w-4 h-4" />
                       Assinatura Digital
                     </h3>
-                    <div className="bg-white rounded-lg p-6 flex items-center justify-center border-2 border-dashed border-white/20">
-                      <img
-                        src={selectedAnamnese.url_assinatura}
-                        alt="Assinatura"
-                        className="max-h-24"
-                      />
+                    <div className="bg-white rounded-lg p-6 flex items-center justify-center border-2 border-dashed border-white/20 min-h-[120px]">
+                      {loadingSignature ? (
+                        <div className="w-6 h-6 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
+                      ) : signatureUrl ? (
+                        <img
+                          src={signatureUrl}
+                          alt="Assinatura"
+                          className="max-h-24"
+                          onError={() => {
+                            toast.error('Erro ao carregar imagem da assinatura');
+                            setSignatureUrl(null);
+                          }}
+                        />
+                      ) : (
+                        <p className="text-sm text-gray-500">Assinatura não disponível</p>
+                      )}
                     </div>
                   </div>
                 )}
