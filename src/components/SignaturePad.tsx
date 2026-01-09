@@ -94,11 +94,11 @@ const SignaturePad = forwardRef<HTMLDivElement, SignaturePadProps>(
           <SignatureCanvas
             ref={sigPadRef}
             penColor="#d4af37"
-            minWidth={0.5}
-            maxWidth={1.0}
-            velocityFilterWeight={0.8}
-            throttle={0}
-            minDistance={2}
+            minWidth={0.8}
+            maxWidth={1.2}
+            velocityFilterWeight={0.7}
+            throttle={8}
+            minDistance={3}
             canvasProps={{
               className: 'w-full h-48 md:h-[280px] touch-none',
               style: {
