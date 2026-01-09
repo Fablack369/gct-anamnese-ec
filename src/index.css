@@ -286,3 +286,24 @@
   .animate-pulse-gold {
     animation: pulse-gold 2s ease-in-out infinite;
   }
+
+  /* Custom Dark Scrollbar */
+  .scrollbar-dark::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  .scrollbar-dark::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+    border-radius: 4px;
+  }
+
+  .scrollbar-dark::-webkit-scrollbar-thumb {
+    background: hsl(var(--border) / 0.5);
+    border-radius: 4px;
+    border: 2px solid hsl(var(--background));
+  }
+
+  .scrollbar-dark::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--border));
+  }

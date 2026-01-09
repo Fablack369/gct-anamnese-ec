@@ -342,8 +342,8 @@ const AdminDashboard: React.FC = () => {
             </DialogTitle>
           </DialogHeader>
 
-          <div className="flex-1 overflow-hidden min-h-0">
-            <ScrollArea className="h-full">
+          <div className="flex-1 overflow-y-auto min-h-0 scrollbar-dark" data-lenis-prevent>
+            <div className="h-full">
               <div className="p-6 space-y-8">
                 {/* Personal Info */}
                 <div className="space-y-4">
@@ -428,7 +428,7 @@ const AdminDashboard: React.FC = () => {
                       <img
                         src={selectedAnamnese.url_assinatura}
                         alt="Assinatura"
-                        className="max-h-24 mix-blend-multiply"
+                        className="max-h-24"
                       />
                     </div>
                   </div>
@@ -438,7 +438,7 @@ const AdminDashboard: React.FC = () => {
                   Ficha enviada em {selectedAnamnese && format(new Date(selectedAnamnese.created_at), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
                 </div>
               </div>
-            </ScrollArea>
+            </div>
           </div>
         </DialogContent>
       </Dialog>

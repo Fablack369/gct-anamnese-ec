@@ -22,10 +22,28 @@ const SignaturePad = forwardRef<HTMLDivElement, SignaturePadProps>(
 
     const handleEnd = useCallback(() => {
       if (sigPadRef.current && !sigPadRef.current.isEmpty()) {
-        // Use getCanvas() instead of getTrimmedCanvas() due to compatibility issues
-        const canvas = sigPadRef.current.getCanvas();
-        const dataUrl = canvas.toDataURL('image/png');
-        onSignatureChange(dataUrl);
+        const originalCanvas = sigPadRef.current.getCanvas();
+
+        // Create a temporary canvas to transform the color
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = originalCanvas.width;
+        tempCanvas.height = originalCanvas.height;
+        const ctx = tempCanvas.getContext('2d');
+
+        if (ctx) {
+          // Draw the original signature (gold)
+          ctx.drawImage(originalCanvas, 0, 0);
+
+          // Use composite operation to change color to black
+          // 'source-in' keeps the alpha of the existing drawing but takes the color of the new drawing
+          ctx.globalCompositeOperation = 'source-in';
+          ctx.fillStyle = '#000000';
+          ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+
+          // Get data URL from the black signature
+          const dataUrl = tempCanvas.toDataURL('image/png');
+          onSignatureChange(dataUrl);
+        }
       }
     }, [onSignatureChange]);
 
@@ -35,6 +53,10 @@ const SignaturePad = forwardRef<HTMLDivElement, SignaturePadProps>(
           <SignatureCanvas
             ref={sigPadRef}
             penColor="#d4af37"
+            minWidth={1.0}
+            maxWidth={3.0}
+            velocityFilterWeight={0.7}
+            throttle={8}
             canvasProps={{
               className: 'w-full h-48 md:h-[280px] touch-none',
               style: {
