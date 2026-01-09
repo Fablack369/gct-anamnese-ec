@@ -23,27 +23,8 @@ const SignaturePad = forwardRef<HTMLDivElement, SignaturePadProps>(
     const [currentStroke, setCurrentStroke] = useState<Point[]>([]);
     const [strokes, setStrokes] = useState<Point[][]>([]);
 
-    // Resize canvas to match container with device pixel ratio
-    const resizeCanvas = useCallback(() => {
-      if (canvasRef.current && containerRef.current) {
-        const canvas = canvasRef.current;
-        const container = containerRef.current;
-        const ratio = Math.max(window.devicePixelRatio || 1, 1);
-
-        canvas.width = container.offsetWidth * ratio;
-        canvas.height = container.offsetHeight * ratio;
-
-        const ctx = canvas.getContext('2d');
-        if (ctx) {
-          ctx.scale(ratio, ratio);
-          // Redraw all strokes after resize
-          redrawCanvas();
-        }
-      }
-    }, []);
-
     // Convert stroke points to SVG path using perfect-freehand
-    const getSvgPathFromStroke = (points: Point[]): string => {
+    const getSvgPathFromStroke = useCallback((points: Point[]): string => {
       const stroke = getStroke(points, {
         size: 16,
         thinning: 0.6,
@@ -73,7 +54,7 @@ const SignaturePad = forwardRef<HTMLDivElement, SignaturePadProps>(
 
       d.push('Z');
       return d.join(' ');
-    };
+    }, []);
 
     // Redraw all strokes on canvas
     const redrawCanvas = useCallback(() => {
@@ -94,17 +75,40 @@ const SignaturePad = forwardRef<HTMLDivElement, SignaturePadProps>(
       ctx.fillStyle = '#d4af37'; // Gold color
       strokes.forEach((stroke) => {
         const pathData = getSvgPathFromStroke(stroke);
-        const path = new Path2D(pathData);
-        ctx.fill(path);
+        if (pathData) {
+          const path = new Path2D(pathData);
+          ctx.fill(path);
+        }
       });
 
       // Draw current stroke if drawing
       if (currentStroke.length > 0) {
         const pathData = getSvgPathFromStroke(currentStroke);
-        const path = new Path2D(pathData);
-        ctx.fill(path);
+        if (pathData) {
+          const path = new Path2D(pathData);
+          ctx.fill(path);
+        }
       }
-    }, [strokes, currentStroke]);
+    }, [strokes, currentStroke, getSvgPathFromStroke]);
+
+    // Resize canvas to match container with device pixel ratio
+    const resizeCanvas = useCallback(() => {
+      if (canvasRef.current && containerRef.current) {
+        const canvas = canvasRef.current;
+        const container = containerRef.current;
+        const ratio = Math.max(window.devicePixelRatio || 1, 1);
+
+        canvas.width = container.offsetWidth * ratio;
+        canvas.height = container.offsetHeight * ratio;
+
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.scale(ratio, ratio);
+          // Redraw all strokes after resize
+          redrawCanvas();
+        }
+      }
+    }, [redrawCanvas]);
 
     useEffect(() => {
       redrawCanvas();
@@ -124,7 +128,7 @@ const SignaturePad = forwardRef<HTMLDivElement, SignaturePadProps>(
     }, [resizeCanvas]);
 
     // Get pointer position relative to canvas
-    const getPointerPos = (e: PointerEvent): Point => {
+    const getPointerPos = useCallback((e: PointerEvent): Point => {
       if (!canvasRef.current) return { x: 0, y: 0, pressure: 0.5 };
 
       const rect = canvasRef.current.getBoundingClientRect();
@@ -133,14 +137,14 @@ const SignaturePad = forwardRef<HTMLDivElement, SignaturePadProps>(
         y: e.clientY - rect.top,
         pressure: e.pressure || 0.5, // Apple Pencil pressure
       };
-    };
+    }, []);
 
     const handlePointerDown = useCallback((e: React.PointerEvent) => {
       e.preventDefault();
       setIsDrawing(true);
       const point = getPointerPos(e.nativeEvent);
       setCurrentStroke([point]);
-    }, []);
+    }, [getPointerPos]);
 
     const handlePointerMove = useCallback(
       (e: React.PointerEvent) => {
@@ -150,7 +154,7 @@ const SignaturePad = forwardRef<HTMLDivElement, SignaturePadProps>(
         const point = getPointerPos(e.nativeEvent);
         setCurrentStroke((prev) => [...prev, point]);
       },
-      [isDrawing]
+      [isDrawing, getPointerPos]
     );
 
     const handlePointerUp = useCallback(() => {
