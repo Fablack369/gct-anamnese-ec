@@ -189,6 +189,12 @@ const SignaturePad = forwardRef<HTMLDivElement, SignaturePadProps>(
       }
     }, [isDrawing, currentStroke, onSignatureChange]);
 
+    const handleClear = useCallback(() => {
+      setStrokes([]);
+      setCurrentStroke([]);
+      onSignatureChange(null);
+    }, [onSignatureChange]);
+
     const handleUndo = useCallback(() => {
       setStrokes((prev) => {
         if (prev.length === 0) return prev;
